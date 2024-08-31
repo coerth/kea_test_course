@@ -156,3 +156,82 @@ class TestRomanNumeralGetRomanNumeralsSum:
         # Assert
         assert result != expected
 
+
+# Parameterized tests
+
+@pytest.mark.parametrize(
+    'roman_numeral, expected',
+    [
+        ('i', 1),
+        ('v', 5),
+        ('x', 10),
+        ('l', 50),
+        ('c', 100),
+        ('d', 500),
+        ('m', 1000),
+    ]
+)
+def test_single_roman_numeral_to_int_parameterized(roman_numeral, expected):
+    result = single_roman_numeral_to_int(roman_numeral)
+    assert result == expected
+
+@pytest.mark.parametrize(
+    'char, expected',
+    [
+        ('i', 'I'),
+        ('v', 'V'),
+        ('x', 'X'),
+        ('l', 'L'),
+        ('c', 'C'),
+        ('d', 'D'),
+        ('m', 'M'),
+    ]
+)
+def test_capitalize_char_parameterized(char, expected):
+    result = capitalize_char(char)
+    assert result == expected
+
+@pytest.mark.parametrize(
+    'roman_numerals, expected',
+    [
+        ('IV', [1, 5]),
+        ('IX', [1, 10]),
+        ('XL', [10, 50]),
+        ('XC', [10, 100]),
+        ('CD', [100, 500]),
+        ('CM', [100, 1000]),
+    ]
+)
+def test_convert_roman_numerals_to_int_values_parameterized(roman_numerals, expected):
+    result = convert_roman_numerals_to_int_values(roman_numerals)
+    assert result == expected
+
+@pytest.mark.parametrize(
+    'roman_numeral_values, expected',
+    [
+        ([1, 5], 4),
+        ([1, 10], 9),
+        ([10, 50], 40),
+        ([10, 100], 90),
+        ([100, 500], 400),
+        ([100, 1000], 900),
+    ]
+)
+def test_calculate_roman_numeral_value_parameterized(roman_numeral_values, expected):
+    result = calculate_roman_numeral_value(roman_numeral_values)
+    assert result == expected
+
+@pytest.mark.parametrize(
+    'roman_numerals, expected',
+    [
+        ('IV', 4),
+        ('IX', 9),
+        ('XL', 40),
+        ('XC', 90),
+        ('CD', 400),
+        ('CM', 900),
+    ]
+)
+def test_get_roman_numerals_sum_parameterized(roman_numerals, expected):
+    result = get_roman_numerals_sum(roman_numerals)
+    assert result == expected
