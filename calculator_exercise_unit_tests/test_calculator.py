@@ -1,8 +1,11 @@
 import pytest
+import sys
 from calculator_exercise_unit_tests.calculator import sum, subtract, multiply, divide
+
 
 # Test for the calculator module
 
+# Initial tests
 class TestCalculatorSum:
     def test_add_positive(self):
         # Arrange
@@ -105,3 +108,48 @@ class TestCalculatorDivide:
                 
                 # Assert
                 assert result != expected
+
+# More comprehensive tests
+
+class TestExtendedCalculatorSum:
+
+    @pytest.mark.parametrize("a, b, expected", [
+        (sys.float_info.min, sys.float_info.min, sys.float_info.min + sys.float_info.min),  # Lower boundary
+        (sys.float_info.max, 0.01, sys.float_info.max + 0.01),  # Upper boundary
+        (50.5, 50.5, 50.5 + 50.5)  # Middle boundary
+    ])
+    def test_sum_valid_boundaries(self, a, b, expected):
+        # Act
+        result = sum(a, b)
+        
+        # Assert
+        assert result == expected
+     
+    def test_sum_boundary_zero(self):
+         # Arrange
+         a = 0
+         b = 0
+         expected = 0
+         
+         # Act
+         result = sum(a, b)
+         
+         # Assert
+         assert result == expected
+    
+    @pytest.mark.parametrize("a, b", [
+        (sys.float_info.max, sys.float_info.max),  # Upper boundary
+        (-sys.float_info.max, -sys.float_info.max)  # Lower boundary
+    ])
+    def test_sum_invalid_boundary(self, a, b):
+        with pytest.raises(OverflowError):
+            sum(a, b)
+    
+    @pytest.mark.parametrize("a, b", [
+        ('a', 2),  # Invalid type
+        (2, 'b'),  # Invalid type
+        ('a', 'b')  # Invalid type
+    ])
+    def test_sum_invalid_type(self, a, b):
+        with pytest.raises(TypeError):
+            sum(a, b)
