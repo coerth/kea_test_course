@@ -235,3 +235,191 @@ def test_calculate_roman_numeral_value_parameterized(roman_numeral_values, expec
 def test_get_roman_numerals_sum_parameterized(roman_numerals, expected):
     result = get_roman_numerals_sum(roman_numerals)
     assert result == expected
+
+class TestCapitalizeChar:
+    @pytest.mark.parametrize("input_char, expected_output", [
+        ('a', 'A'),  # Lowercase alphabetic character
+        ('z', 'Z'),  # Lowercase alphabetic character
+        ('A', 'A'),  # Uppercase alphabetic character
+        ('Z', 'Z'),  # Uppercase alphabetic character
+        ('1', '1'),  # Non-alphabetic character
+        ('@', '@'),  # Non-alphabetic character
+        (' ', ' '),  # Non-alphabetic character
+        
+    ])
+    def test_capitalize_char(self, input_char, expected_output):
+        assert capitalize_char(input_char) == expected_output
+    
+    @pytest.mark.parametrize("input_char", [
+        'ab',  # More than one character
+        '',  # Empty string
+    ])
+    def test_capitalize_char_invalid_input(self, input_char):
+        with pytest.raises(ValueError):
+            capitalize_char(input_char)
+
+class TestGetRomanNumeralsDict:
+    def test_roman_numerals_dict_keys(self):
+        # Act
+        roman_numerals_dict = get_roman_numerals_dict()
+        
+        # Assert
+        expected_keys = {'I', 'V', 'X', 'L', 'C', 'D', 'M'}
+        assert set(roman_numerals_dict.keys()) == expected_keys
+    
+    def test_roman_numerals_dict_values(self):
+        # Act
+        roman_numerals_dict = get_roman_numerals_dict()
+        
+        # Assert
+        expected_values = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000,
+        }
+        assert roman_numerals_dict == expected_values
+    
+    def test_roman_numerals_dict_no_unexpected_keys(self):
+        # Act
+        roman_numerals_dict = get_roman_numerals_dict()
+        
+        # Assert
+        unexpected_keys = set(roman_numerals_dict.keys()) - {'I', 'V', 'X', 'L', 'C', 'D', 'M'}
+        assert not unexpected_keys
+
+class TestSingleRomanNumeralToInt:
+    @pytest.mark.parametrize("roman_numeral, expected_output", [
+        ('I', 1), # Uppercase alphabetic characters
+        ('V', 5), 
+        ('X', 10),
+        ('L', 50),
+        ('C', 100), 
+        ('D', 500), 
+        ('M', 1000),
+        ('i', 1),  # Lowercase alphabetic characters
+        ('v', 5),  
+        ('x', 10), 
+        ('l', 50), 
+        ('c', 100),  
+        ('d', 500), 
+        ('m', 1000),  
+    ])
+    def test_single_roman_numeral_to_int(self, roman_numeral, expected_output):
+        assert single_roman_numeral_to_int(roman_numeral) == expected_output
+    
+    @pytest.mark.parametrize("roman_numeral", [
+        'II',  # More than one character
+        '',  # Empty string
+    ])
+    def test_single_roman_numeral_to_int_invalid_input_valuerror(self, roman_numeral):
+        with pytest.raises(ValueError):
+            single_roman_numeral_to_int(roman_numeral)
+    
+    @pytest.mark.parametrize("roman_numeral", [
+        'A',  # Non-alphabetic character
+        '1',  # Non-alphabetic character
+        '@',  # Non-alphabetic character
+    ])
+    def test_single_roman_numeral_to_int_invalid_input_Keyerror(self, roman_numeral):
+        with pytest.raises(KeyError):
+            single_roman_numeral_to_int(roman_numeral)
+
+class TestConvertRomanNumeralsToIntValues:
+    @pytest.mark.parametrize("roman_numerals, expected_output", [
+        ('IV', [1, 5]),  # Lowercase alphabetic characters
+        ('IX', [1, 10]), 
+        ('XL', [10, 50]), 
+        ('XC', [10, 100]), 
+        ('CD', [100, 500]), 
+        ('CM', [100, 1000]), 
+        ('iv', [1, 5]),  # Uppercase alphabetic characters
+        ('ix', [1, 10]),  
+        ('xl', [10, 50]),  
+        ('xc', [10, 100]),  
+        ('cd', [100, 500]),  
+        ('cm', [100, 1000]),  
+    ])
+    def test_convert_roman_numerals_to_int_values(self, roman_numerals, expected_output):
+        assert convert_roman_numerals_to_int_values(roman_numerals) == expected_output
+    
+    @pytest.mark.parametrize("roman_numerals", [
+        '',  # More than one character
+    ])
+    def test_convert_roman_numerals_to_int_values_invalid_input_ValueError(self, roman_numerals):
+        with pytest.raises(ValueError):
+            convert_roman_numerals_to_int_values(roman_numerals)
+
+    @pytest.mark.parametrize("roman_numerals", [
+        'A',  # Non-alphabetic character
+        '1',  # Non-alphabetic character
+        '@',  # Non-alphabetic character
+    ])
+    def test_convert_roman_numerals_to_int_values_invalid_input_KeyError(self, roman_numerals):
+        with pytest.raises(KeyError):
+            convert_roman_numerals_to_int_values(roman_numerals)
+
+class TestCalculateRomanNumeralValue:
+    @pytest.mark.parametrize("roman_numeral_values, expected_output", [
+        ([1], 1),  # Lower boundary
+        ([100, 500], 400),  
+        ([1000, 1000, 1000, 100, 1000, 10, 100, 1, 10], 3999),  # Upper boundary
+    ])
+    def test_calculate_roman_numeral_value_valid(self, roman_numeral_values, expected_output):
+        assert calculate_roman_numeral_value(roman_numeral_values) == expected_output
+    
+    @pytest.mark.parametrize("roman_numeral_values", [
+        [],  # Empty list
+        [2],  # Invalid roman numeral
+        [99999],  # Invalid roman numeral
+    ])
+    def test_calculate_roman_numeral_value_invalid_input_ValueError(self, roman_numeral_values):
+        with pytest.raises(ValueError):
+            calculate_roman_numeral_value(roman_numeral_values)
+
+    @pytest.mark.parametrize("roman_numeral_values", [
+        ['I'],  # Invalid type
+        ['V'],  # Invalid type
+        ['X'],  # Invalid type
+        ['L', 1],
+        ['1', '1'],
+        ['1',1000]
+    ])
+    def test_calculate_roman_numeral_value_invalid_input_TypeError(self, roman_numeral_values):
+        with pytest.raises(TypeError):
+            calculate_roman_numeral_value(roman_numeral_values)
+
+class TestGetRomanNumeralsSum:
+    @pytest.mark.parametrize("roman_numerals, expected_output", [
+        ('I', 1),  # Lower boundary
+        ('i', 1),
+        ('CM', 900),  
+        ('cm', 900),  
+        ('MMMCMXCIX', 3999),  # Upper boundary
+        ('mmmcmxcix', 3999),
+    ])
+    def test_get_roman_numerals_sum(self, roman_numerals, expected_output):
+        assert get_roman_numerals_sum(roman_numerals) == expected_output
+    
+    @pytest.mark.parametrize("roman_numerals", [
+        '',  # Empty string
+        'MMMMMMMMM'
+    ])
+    def test_get_roman_numerals_sum_invalid_input_valueerror(self, roman_numerals):
+        with pytest.raises(ValueError):
+            get_roman_numerals_sum(roman_numerals)
+
+    @pytest.mark.parametrize("roman_numerals", [
+        'A',  # Non-alphabetic character
+        '1',  # Non-alphabetic character
+        '@',  # Non-alphabetic character
+    ])
+    def test_get_roman_numerals_sum_invalid_input_KeyError(self, roman_numerals):
+        with pytest.raises(KeyError):
+            get_roman_numerals_sum(roman_numerals)
+
+    
+    
